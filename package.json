@@ -1,0 +1,22 @@
+{
+  "name": "quantum_fluff",
+  "version": "1.0.0",
+  "description": "hacked2022",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamsandvich/quantum_fluff.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hamsandvich/quantum_fluff/issues"
+  },
+  "homepage": "https://github.com/hamsandvich/quantum_fluff#readme",
+  "dependencies": {
+    "create-react-app": "^5.0.0"
+  }
+}
