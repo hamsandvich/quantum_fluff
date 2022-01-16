@@ -11,6 +11,7 @@ const Login = ({ login, isAuth}) => {
     const onSubmit = async e => {
         e.preventDefault();
         login(email, password)
+        
     }
     // redirect if the user is logged in
     if(isAuth){
