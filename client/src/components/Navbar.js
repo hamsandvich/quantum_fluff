@@ -18,8 +18,7 @@ const Navbar = ({ isAuth, loading, logout }) => {
         <li><Link to="/Reviews">Reviews</Link></li>
         <li><Link to="/register">Register</Link></li>
         <li><Link to="/login">Login</Link></li>
-        <li><Link to="add-review">Add Review</Link></li>
-        <li><Link to="/Front-page">FP</Link></li>
+
       </ul>
       );
       return (
