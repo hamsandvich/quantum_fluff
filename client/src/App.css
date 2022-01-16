@@ -18,7 +18,8 @@
     font-size: 1rem;
     line-height: 1.6;
     background-color: #fff;
-    color: #333;
+    background-image: url(./greek-vase_1.png);
+    color: rgb(0, 0, 0);
   }
   
   a {
