@@ -7,40 +7,45 @@ const Register = ({ setAlert, register, isAuth }) => {
 
    
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email:'',
-        school:'',
-        major:'',
-        minor:'',
-        password: '',
-        password2:'',
+        firstName: "",
+        lastName: "",
+        email:"",
+        school:"",
+        major:"",
+        minor:"",
+        password: "",
+        password2:"",
     });
     
     const onChange = e => setFormData({...formData, [e.target.name]: e.target.value })
     const onSubmit = async e => {
         e.preventDefault();
         if (password !== password2) {
-            setAlert('passwords do not match', 'danger');
+            alert('passwords do not match', 'danger');
         } else {
 
-            axios.post('/user', {
+            axios.post("http://127.0.0.1:8000/register/",{
                 "firstName": firstName,
                 "lastName": lastName,
-                "Password": password,
-                "Email": email,
-                "University": school,
-                "Major": major,
-                "Minor": minor,
+                "password": password,
+                "email": email,
+                "university": school,
+                "major": major,
+                "minor": minor,
 
               })
 
-              .then(function (response) {
-                console.log(response);
+              .then(res => {
+                console.log(res);
+                console.log(res.data);
+                console.log(res.data.error.message);
+                if (res.data.error.message  == 'User already exists.' ){
+                    alert('User already exists.', 'danger');
+                }
               })
-              .catch(function (error) {
-                console.log(error);
-              });
+             // axios.catch(function (error) {
+             //   console.log(error);
+             // });
 
         }
     }
@@ -63,17 +68,18 @@ const Register = ({ setAlert, register, isAuth }) => {
                 <input type="text" placeholder="Last Name" name="lastName" value={lastName} onChange={(e) => onChange(e)} required />
                 </div>
                 <div className="form-group">
+                <input type="text" placeholder="School" name="school" value={school} onChange={(e) => onChange(e)} required />
+                </div>
+                <div className="form-group">
+                <input type="text" placeholder="Major" name="major" value={major} onChange={(e) => onChange(e)} required />
+                </div>
+                <div className="form-group">
+                <input type="text" placeholder="Minor" name="minor" value={minor} onChange={(e) => onChange(e)} required />
+                </div>
+                <div className="form-group">
                 <input type="email" placeholder="Email Address" name="email" value={email} onChange={(e) => onChange(e)}  />
                 </div>
-                <div className="form-group">
-                <input type="text" placeholder="School" name="School" value={school} onChange={(e) => onChange(e)} required />
-                </div>
-                <div className="form-group">
-                <input type="text" placeholder="Major" name="Major" value={major} onChange={(e) => onChange(e)} required />
-                </div>
-                <div className="form-group">
-                <input type="text" placeholder="Minor" name="Minor" value={minor} onChange={(e) => onChange(e)} required />
-                </div>
+
 
                 
                 <div className="form-group">
