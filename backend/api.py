@@ -2,10 +2,12 @@ from typing import Optional, List
 
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+
 
 client = MongoClient("127.0.0.1:27017")
 db = client.quantum_fluff
@@ -29,7 +31,13 @@ class Review(BaseModel):
 
 
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/register/")
 async def create_user(user: User):
@@ -43,8 +51,12 @@ async def create_user(user: User):
         }
     else:
         json_compatible_user_data = jsonable_encoder(user)
-        r = db.Users.insert_one(json_compatible_user_data)
-        return {'success': True}
+        db.Users.insert_one(json_compatible_user_data)
+        r = db.Users.find_one({'email': user.email})
+        return {
+            'success': True,
+            'id': str(r['_id'])
+        }
 
 class Auth(BaseModel):
     email: str
@@ -55,7 +67,10 @@ async def auth_user(user: Auth):
     if db.Users.count_documents({'email': user.email}) > 0:
         r = db.Users.find_one({'email': user.email})
         if r['password'] == user.password:
-            return {'success': True}
+            return {
+                'success': True,
+                'id': str(r['_id'])
+            }
         else:
             return {
                 'success': False,
@@ -112,6 +127,7 @@ async def modify_user(user: User):
 
 class CourseRequest(BaseModel):
     name: str
+    university: str
     department: str
 
 @app.post("/add_course/")
@@ -133,8 +149,8 @@ async def add_course(course: CourseRequest):
 
 @app.get("/course_info/")
 async def course_info(courseName: str):
-    if db.Courses.count_documents({'name': course.name}) > 0:
-        r = db.Courses.find_one({'name': course.name})
+    if db.Courses.count_documents({'name': courseName}) > 0:
+        r = db.Courses.find_one({'name': courseName})
         r['_id'] = str(r['_id'])
         return {
             'success': True,
@@ -152,14 +168,14 @@ async def course_info(courseName: str):
 
 class ReviewRequest(BaseModel):
     courseName: str
-    department: str
+    university: str
     review: Review
 
 @app.post("/add_review/")
 async def add_review(review: ReviewRequest):
     prof = review.review.prof
-    if db.Courses.count_documents({'name': review.courseName, 'department': review.department}) > 0:
-        course = db.Courses.find_one({'name': review.courseName, 'department': review.department})
+    if db.Courses.count_documents({'name': review.courseName, 'university': review.university}) > 0:
+        course = db.Courses.find_one({'name': review.courseName, 'university': review.university})
         if prof not in course['profs']:
             db.Courses.update_one({'name': review.courseName}, {'$push': {'profs': prof}})
         json_compatible_course_data = jsonable_encoder(review.review)
@@ -167,6 +183,70 @@ async def add_review(review: ReviewRequest):
         return {
             'success': True
         }
+    else:
+        return {
+            'success': False,
+            'error': {
+                'code': 5,
+                'message': "Course does not exist."
+            }
+        }
+
+
+@app.get("/course_info_by_name/")
+async def course_info_name(name: str):
+    if db.Courses.count_documents({'name': name}) > 0:
+        temp = db.Courses.find({'name': name})
+        r = {
+            'success': True,
+            'course_info': []
+        }
+        for i in temp:
+            i.pop("_id", None)
+            r['course_info'].append(i)
+        return r
+    else:
+        return {
+            'success': False,
+            'error': {
+                'code': 5,
+                'message': "Course does not exist."
+            }
+        }
+
+@app.get("/course_info_by_university/")
+async def course_info_univercity(univercity: str):
+    if db.Courses.count_documents({'university': univercity}) > 0:
+        temp = db.Courses.find({'university': univercity})
+        r = {
+            'success': True,
+            'course_info': []
+        }
+        for i in temp:
+            i.pop("_id", None)
+            r['course_info'].append(i)
+        return r
+    else:
+        return {
+            'success': False,
+            'error': {
+                'code': 5,
+                'message': "Course does not exist."
+            }
+        }
+
+@app.get("/course_info_by_department/")
+async def course_info_department(department: str):
+    if db.Courses.count_documents({'department': department}) > 0:
+        temp = db.Courses.find({'department': department})
+        r = {
+            'success': True,
+            'course_info': []
+        }
+        for i in temp:
+            i.pop("_id", None)
+            r['course_info'].append(i)
+        return r
     else:
         return {
             'success': False,
