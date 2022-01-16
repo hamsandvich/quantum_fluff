@@ -18,7 +18,7 @@ function App() {
           <Route exact path="/register" element={<Register isAuth={false} login={() => console.log("logged in")}/>}/>
           <Route exact path="/Reviews" element={<CourseReviews/>} />
           <Route exact path="/add-review" element={<AddReview />} />
-          <Route exact path="/Front-page" element={<FrontPage />} />
+          <Route exact path="/" element={<FrontPage />} />
         </Routes>
       </>
   
