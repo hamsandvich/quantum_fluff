@@ -1,18 +1,20 @@
 import React, {useState} from 'react'
 import { Link, Navigate } from 'react-router-dom';
+import axios from 'axios';
 
- 
 
 const Register = ({ setAlert, register, isAuth }) => {
 
+   
     const [formData, setFormData] = useState({
-        name:'',
+        firstName: '',
+        lastName: '',
         email:'',
         school:'',
         major:'',
         minor:'',
         password: '',
-        password2:''
+        password2:'',
     });
     
     const onChange = e => setFormData({...formData, [e.target.name]: e.target.value })
@@ -21,27 +23,29 @@ const Register = ({ setAlert, register, isAuth }) => {
         if (password !== password2) {
             setAlert('passwords do not match', 'danger');
         } else {
-           // use axios to make a post request with the formData state
-           // only pass in password1 no need to pass password 2 id passwords are equal 
-           // sample code below just change the parameters
-           /* const config = {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }
-    const body = JSON.stringify({ name, email, password });
-    try {
-        const res = await axios.post('/api/users', body, config);
-        save the firstName and email address in the localstorage and put a timer on it
-    } catch (err) {
-        check what is your error
-        console.log(error)
-           
-           */ 
+
+            axios.post('/user', {
+                "firstName": firstName,
+                "lastName": lastName,
+                "Password": password,
+                "Email": email,
+                "University": school,
+                "Major": major,
+                "Minor": minor,
+
+              })
+
+              .then(function (response) {
+                console.log(response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+
         }
     }
 
-    const {name, email, school, major, minor, password, password2} = formData;
+    const {firstName, lastName, email, school, major, minor, password, password2} = formData;
 
     if(isAuth){
         return <Navigate to="/dashboard" />
@@ -53,10 +57,14 @@ const Register = ({ setAlert, register, isAuth }) => {
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
             <form className="form" onSubmit={e => onSubmit(e)}>
                 <div className="form-group">
-                <input type="text" placeholder="Name" name="name" value={name} onChange={(e) => onChange(e)} required />
+                <input type="text" placeholder="First Name" name="firstName" value={firstName} onChange={(e) => onChange(e)} required />
+                </div>
+                <div className="form-group">
+                <input type="text" placeholder="Last Name" name="lastName" value={lastName} onChange={(e) => onChange(e)} required />
                 </div>
                 <div className="form-group">
                 <input type="email" placeholder="Email Address" name="email" value={email} onChange={(e) => onChange(e)}  />
+                </div>
                 <div className="form-group">
                 <input type="text" placeholder="School" name="School" value={school} onChange={(e) => onChange(e)} required />
                 </div>
@@ -66,7 +74,8 @@ const Register = ({ setAlert, register, isAuth }) => {
                 <div className="form-group">
                 <input type="text" placeholder="Minor" name="Minor" value={minor} onChange={(e) => onChange(e)} required />
                 </div>
-                </div>
+
+                
                 <div className="form-group">
                 <input
                     type="password"
