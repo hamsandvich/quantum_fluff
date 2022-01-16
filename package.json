@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/hamsandvich/quantum_fluff#readme",
   "dependencies": {
-    "create-react-app": "^5.0.0"
+    "create-react-app": "^5.0.0",
+    "react": "^17.0.2",
+    "react-router-dom": "^6.2.1"
   }
 }
