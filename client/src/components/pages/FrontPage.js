@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 import { Link, Navigate } from 'react-router-dom';
 import computerImg from '../../logo512.png'
@@ -5,10 +6,22 @@ import computerImg from '../../logo512.png'
 const FrontPage = () => {
     const [formData, setFormData] = useState({
         school: '',
+        course: ''
     });
-    const { school } = formData;
+    const { school, course } = formData;
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
     const onSubmit = async e => {
+        axios.get('http://127.0.0.1:8000/course_info/', {"courseName": course})
+        .then(res => {
+            console.log(res.data);
+
+        })
+        .catch(error => {
+            axios.post('http://127.0.0.1:8000/add_course/', {"name": course, "university": school, "department": ""})
+            .then(res => {
+                console.log(res.data);
+            })
+        })
     }
 
     return (
@@ -21,10 +34,13 @@ const FrontPage = () => {
                         <h1 className='large text-primary'>Reviews</h1>
                         <h4 className='text-secondary'>Student's #1 Trusted Source</h4>
                         <form className='form' onSubmit={e => onSubmit(e)}>
-                            <div className='form-group'>
+                            {/*<div className='form-group'>
                                 <input type='input' placeholder='Search by school' name='school' value={school} onChange={(e) => onChange(e)} />
-                                <input type='submit' className='btn btn-primary' value='Search' />
+                            </div>*/}
+                            <div className='form-group'>
+                                <input type='input' placeholder='Search by course Name' name='course' value={course} onChange={(e) => onChange(e)} />
                             </div>
+                            <input type='submit' className='btn btn-primary' value='Search' />
                         </form>
                     </div>
                     <div style={{ width: '300px', height: '300px' }}>

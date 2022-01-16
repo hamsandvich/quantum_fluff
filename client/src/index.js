@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import {BrowserRouter as Router} from 'react-router-dom';
+import {StoreProvider} from './context';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <StoreProvider>
     <Router><App /></Router>
-  </React.StrictMode>,
+  </StoreProvider>,
   document.getElementById('root')
 );
