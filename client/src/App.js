@@ -4,7 +4,9 @@ import { Route,Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Login from './components/pages/Login';
 import Register from './components/pages/Register';
+import CourseReviews from './components/pages/Course-Review'
 import './App.css';
+import AddReview from './components/pages/Add-Review';
 function App() {
   
   return (
@@ -13,6 +15,8 @@ function App() {
         <Routes>
           <Route exact path="/login" element={<Login isAuth={false} login={() => console.log("logged in")}/>}/>
           <Route exact path="/register" element={<Register isAuth={false} login={() => console.log("logged in")}/>}/>
+          <Route exact path="/Reviews" element={<CourseReviews/>} />
+          <Route exact path="/add-review" element={<AddReview />} />
         </Routes>
       </>
   

@@ -21,7 +21,23 @@ const Register = ({ setAlert, register, isAuth }) => {
         if (password !== password2) {
             setAlert('passwords do not match', 'danger');
         } else {
-           register({name, email, password});
+           // use axios to make a post request with the formData state
+           // only pass in password1 no need to pass password 2 id passwords are equal 
+           // sample code below just change the parameters
+           /* const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    const body = JSON.stringify({ name, email, password });
+    try {
+        const res = await axios.post('/api/users', body, config);
+        save the firstName and email address in the localstorage and put a timer on it
+    } catch (err) {
+        check what is your error
+        console.log(error)
+           
+           */ 
         }
     }
 
